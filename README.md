@@ -1,6 +1,6 @@
 # Math Script Renderer
 
-This app allows you to input LaTeX math scripts and download rendered outputs in various formats.
+This app allows you to input LaTeX math scripts and download rendered outputs in various image formats.
 
 ## Features
 
