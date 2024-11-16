@@ -1,0 +1,49 @@
+# Python cache files
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environment
+venv/
+env/
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+.project
+
+# Logs and temporary files
+*.log
+*.tmp
+*.swp
+
+# Build directories (if you package the app in the future)
+build/
+dist/
+*.egg-info/
+
+# Flask-specific files
+instance/
+*.sqlite3
+
+# IDE-specific files
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# Node modules (if you ever introduce JavaScript package management)
+node_modules/
+
+# Compiled files
+*.so
+*.o
+*.out
+*.a
+
+# Other unnecessary or sensitive files
+config.json
+.env
+
+# Static assets cache (optional)
+static/cache/
