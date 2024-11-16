@@ -151,7 +151,7 @@ def start_ui():
     global text_input, rendered_output, root, image_frame, latest_image
 
     root = tk.Tk()
-    root.title("LaTeX Math Renderer")
+    root.title("LaTeX To Image")
     root.geometry("450x338")  # Set window size
     root.minsize(300, 225)     # Minimum window size
     root.configure(bg='white')
