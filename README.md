@@ -5,7 +5,7 @@ This app allows you to input LaTeX math scripts and download rendered outputs in
 ## Features
 
 - Real-time LaTeX rendering
-- Download rendered math scripts as images or PDFs
+- Download rendered math scripts as images
 - User-friendly interface
 
 ## Requirements
