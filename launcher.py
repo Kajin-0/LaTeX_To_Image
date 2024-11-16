@@ -1,9 +1,35 @@
+import os
+import subprocess
+import time
+import requests
 import tkinter as tk
 from tkinter import filedialog
-import requests
 from PIL import Image, ImageTk, ImageOps
 import io
-import time
+
+def start_flask_server():
+    """
+    Start the Flask server as a subprocess if it is not already running.
+    """
+    try:
+        # Check if the server is already running
+        response = requests.get("http://127.0.0.1:5000/test", timeout=5)
+        if response.status_code == 200:
+            print("Flask server is already running.")
+            return None  # No process to return since the server is already running
+    except requests.ConnectionError:
+        print("Flask server is not running. Starting it...")
+
+    # Ensure the working directory is correct
+    os.chdir(os.path.dirname(__file__))
+
+    # Start Flask server as a subprocess
+    process = subprocess.Popen(
+        ["python", "app.py"],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE
+    )
+    return process
 
 def check_server(timeout=30):
     """
@@ -61,35 +87,45 @@ def render_latex():
         # Display the image
         display_image(img_data)
     except requests.exceptions.RequestException as e:
-        print(f"Error: {e}")
+        # Silently handle the error without showing a popup
+        print(f"Render Error: {e}")
+        # Do not clear the image; keep displaying the last successful render
+        # Optionally, you can indicate an error visually if desired
+        pass
 
 def display_image(img_data):
     """
     Display the rendered image in the Tkinter UI.
     """
-    img = Image.open(io.BytesIO(img_data))
+    try:
+        img = Image.open(io.BytesIO(img_data))
 
-    # Add a border directly to the image
-    border_color = '#CCCCCC'  # Muted grey color
-    img_with_border = ImageOps.expand(img, border=1, fill=border_color)
+        # Add a border directly to the image
+        border_color = '#CCCCCC'  # Muted grey color
+        img_with_border = ImageOps.expand(img, border=1, fill=border_color)
 
-    # Get the available display area inside the image_frame
-    display_width = image_frame.winfo_width()
-    display_height = display_width * 9 / 16  # Enforce 16:9 aspect ratio
+        # Get the available display area inside the image_frame
+        display_width = image_frame.winfo_width()
+        display_height = display_width * 9 / 16  # Enforce 16:9 aspect ratio
 
-    # Calculate scaling to fit the image within the display area while maintaining aspect ratio
-    width_ratio = display_width / img_with_border.width
-    height_ratio = display_height / img_with_border.height
-    scale = min(width_ratio, height_ratio, 1.0)
+        # Calculate scaling to fit the image within the display area while maintaining aspect ratio
+        width_ratio = display_width / img_with_border.width
+        height_ratio = display_height / img_with_border.height
+        scale = min(width_ratio, height_ratio, 1.0)
 
-    # Resize image only if necessary
-    new_width = int(img_with_border.width * scale)
-    new_height = int(img_with_border.height * scale)
-    img_resized = img_with_border.resize((new_width, new_height), Image.LANCZOS)
+        # Resize image only if necessary
+        new_width = int(img_with_border.width * scale)
+        new_height = int(img_with_border.height * scale)
+        img_resized = img_with_border.resize((new_width, new_height), Image.LANCZOS)
 
-    photo = ImageTk.PhotoImage(img_resized)
-    rendered_output.config(image=photo, width=new_width, height=new_height)
-    rendered_output.image = photo
+        photo = ImageTk.PhotoImage(img_resized)
+        rendered_output.config(image=photo, width=new_width, height=new_height)
+        rendered_output.image = photo
+    except Exception as e:
+        print(f"Display Error: {e}")
+        # Silently handle the error without showing a popup
+        # Do not clear the image; keep displaying the last successful render
+        pass
 
 def save_image():
     """
@@ -116,8 +152,8 @@ def start_ui():
 
     root = tk.Tk()
     root.title("LaTeX Math Renderer")
-    root.geometry("450x338")  # Set window size to approximately 75% of the previous size
-    root.minsize(300, 225)     # Adjust the minimum size accordingly
+    root.geometry("450x338")  # Set window size
+    root.minsize(300, 225)     # Minimum window size
     root.configure(bg='white')
 
     # Configure the root grid to be expandable
@@ -170,10 +206,20 @@ def start_ui():
     root.mainloop()
 
 if __name__ == '__main__':
+    process = None
     try:
-        # Ensure Flask server is running
+        # Start the Flask server
+        process = start_flask_server()
+
+        # Check if the server is ready
         check_server()
+
+        print("Server is ready. Proceeding to UI...")
         # Start the Tkinter UI
         start_ui()
     except TimeoutError as e:
         print(e)
+    finally:
+        # Cleanup: Ensure subprocess is terminated if it was started
+        if process:
+            process.terminate()
