@@ -1,11 +1,11 @@
-# LaTeX To Image
+# Math Script Renderer
 
-This app allows you to input LaTeX math text and download rendered outputs in various image formats.
+This app allows you to input LaTeX math scripts and download rendered outputs in various formats.
 
 ## Features
 
 - Real-time LaTeX rendering
-- Download rendered math scripts as images
+- Download rendered math scripts as images or PDFs
 - User-friendly interface
 
 ## Requirements
