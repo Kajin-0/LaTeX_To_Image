@@ -1,4 +1,4 @@
-# Math Script Renderer
+# Latex To Image
 
 This app allows you to input LaTeX math scripts and download rendered outputs in various formats.
 
@@ -15,7 +15,8 @@ This app allows you to input LaTeX math scripts and download rendered outputs in
 
 ## Installation
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/your-username/math-script-renderer.git
-   cd math-script-renderer
+1. type into the commandline: git clone https://github.com/your-username/latex-to-image.git
+2. cd latex-to-image
+3. using python to build the executable: python build_laucher.py
+4. cd dist
+5. Run the execuatable Latex_To_Image.exe (for linux: ./Latex_To_Image)
